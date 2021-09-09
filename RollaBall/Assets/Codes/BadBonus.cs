@@ -8,23 +8,21 @@ namespace SkipinGame
 {
     public sealed class BadBonus : InteractiveObject, IFlay, IRotation
     {
-        public event Action<string, Color> OnCaughtPlayerChange = delegate (string str,
-            Color color){ };
-       
+        public event Action<string, Color> OnCaughtPlayerChange = delegate (string str, Color color) { };
         private float _lengthFlay;
         private float _speedRotation;
 
         private void Awake()
         {
-            _speedRotation = Range(10.0f, 50.0f);
             _lengthFlay = Range(1.0f, 5.0f);
-            MyAction += Flay;
-            MyAction += Rotation;
+            _speedRotation = Range(10.0f, 50.0f);
         }
 
         protected override void Interaction()
         {
             OnCaughtPlayerChange.Invoke(gameObject.name, _color);
+
+            Destroy(gameObject);
         }
 
         public override void Execute()
@@ -32,21 +30,19 @@ namespace SkipinGame
             if (!IsInteractable) { return; }
             Flay();
             Rotation();
-            //base.Interaction();
-            //Debug.Log("I contact with Bad");
         }
 
         public void Flay()
         {
             transform.localPosition = new Vector3(transform.localPosition.x,
-                Mathf.PingPong(Time.time, _lengthFlay), transform.localPosition.z); ;
+                Mathf.PingPong(Time.time, _lengthFlay),
+                transform.localPosition.z);
         }
 
         public void Rotation()
         {
             transform.Rotate(Vector3.up * (Time.deltaTime * _speedRotation), Space.World);
         }
-
     }
 }
 

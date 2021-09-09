@@ -7,11 +7,13 @@ namespace SkipinGame
 {
     public abstract class InteractiveObject : MonoBehaviour, IExecute
     {
+        [SerializeField] private bool _isAllowScaling;
+        [SerializeField] private float _activeDis;
+        
         protected Color _color;
 
         private bool _isInteractable;
 
-        public event System.Action MyAction;
         protected bool IsInteractable
         {
             get { return _isInteractable; }
@@ -20,29 +22,21 @@ namespace SkipinGame
                 _isInteractable = value;
                 GetComponent<Renderer>().enabled = _isInteractable;
                 GetComponent<Collider>().enabled = _isInteractable;
-
             }
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.GetComponent<SkipinGame.PlayerBall>() != null)
-            {
-                this.MyAction?.Invoke();
-            }
-
-            if (!IsInteractable || !other.gameObject.GetComponent<SkipinGame.PlayerBall>())
+            if (!IsInteractable || !other.CompareTag("Player"))
             {
                 return;
             }
-            Interaction();
             IsInteractable = false;
-            //Destroy(gameObject);
+            Interaction();
         }
 
         protected abstract void Interaction();
         public abstract void Execute();
-
 
         private void Start()
         {
@@ -52,24 +46,23 @@ namespace SkipinGame
             {
                 renderer.material.color = _color;
             }
-            MyAction += Interaction;
-
         }
 
-       /* public virtual void Interaction()
+        private void OnDrawGizmos()
         {
-            SomethingBaseMethod();
+            Gizmos.DrawIcon(transform.position, "Face.jpg", _isAllowScaling);
         }
 
-        public void SomethingBaseMethod()
+        private void OnDrawGizmosSelected()
         {
-            Debug.Log("Alloho Gawai");
-        }*/
+#if UNITY_EDITOR
+            Transform t = transform;
 
-
-
-
-
+            var flat = new Vector3(_activeDis, 0, _activeDis);
+            Gizmos.matrix = Matrix4x4.TRS(t.position, t.rotation, flat);
+            Gizmos.DrawWireSphere(Vector3.zero, 5);
+#endif
+        }
     }
 
 

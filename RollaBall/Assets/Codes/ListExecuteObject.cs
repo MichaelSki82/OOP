@@ -52,6 +52,7 @@ namespace SkipinGame
             _index++;
             return true;
         }
+
         public void Reset() => _index = -1;
 
         public object Current => _interactiveObjects[_index];

@@ -45,14 +45,14 @@ namespace SkipinGame
         public void Load(PlayerBase player)
         {
             var file = Path.Combine(_path, _fileName);
-            if (!File.Exists(file))
-            {
-                throw new DataException($"File {file} not found");
-            }
+            if (!File.Exists(file)) return;
+           // {
+               // throw new DataException($"File {file} not found");
+            //}
             var newPlayer = _data.Load(file);
             player.transform.position = newPlayer.Position;
             player.name = newPlayer.Name;
-            player.gameObject.SetActive(newPlayer.IsEnabled);
+            player.gameObject.SetActive(!newPlayer.IsEnabled);
 
             Debug.Log(newPlayer);
         }
