@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,8 +10,11 @@ namespace SkipinGame
     {
         private Text _finishGameLabel;
 
-        public DisplayEndGame()
+        public DisplayEndGame(GameObject endGame)
         {
+            _finishGameLabel = endGame.GetComponentInChildren<Text>();
+            _finishGameLabel.text = String.Empty;
+
             // load from code
         }
 
